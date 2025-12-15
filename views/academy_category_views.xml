@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+
+    <record id="view_academy_course_category_list" model="ir.ui.view">
+        <field name="name">academy.course.category.list</field>
+        <field name="model">academy.course.category</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="course_count"/>
+            </list>
+        </field>
+    </record>
+
+
+    <record id="view_academy_course_category_form" model="ir.ui.view">
+        <field name="name">academy.course.category.form</field>
+        <field name="model">academy.course.category</field>
+        <field name="arch" type="xml">
+            <form string="Category">
+                <sheet>
+                    <group>
+                        <field name="name" required="1"/>
+                        <field name="description"/>
+                    </group>
+
+                    <notebook>
+                        <page string="Courses">
+                            <field name="course_ids">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="code"/>
+                                    <field name="state"/>
+                                    <field name="instructor_id"/>
+                                    <field name="start_date"/>
+                                    <field name="end_date"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>

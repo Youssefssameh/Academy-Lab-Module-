@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+
+    <menuitem id="menu_academy_root"
+        name="Academy"
+        sequence="10"
+        action="academy_lab.action_academy_courses"/>
+
+
+    <menuitem id="menu_academy_courses_root"
+        name="Courses"
+        parent="menu_academy_root"
+        sequence="10"/>
+
+    <menuitem id="menu_academy_courses"
+        name="Courses"
+        parent="menu_academy_courses_root"
+        action="academy_lab.action_academy_courses"
+        sequence="10"/>
+
+    <menuitem id="menu_academy_course_categories"
+        name="Categories"
+        parent="menu_academy_courses_root"
+        action="academy_lab.action_academy_course_categories"
+        sequence="20"/>
+
+
+    <menuitem id="menu_academy_enrollments_root"
+        name="Enrollments"
+        parent="menu_academy_root"
+        sequence="20"/>
+
+    <menuitem id="menu_academy_enrollments_all"
+        name="All Enrollments"
+        parent="menu_academy_enrollments_root"
+        action="academy_lab.action_academy_enrollment_all"
+        sequence="10"/>
+
+    <menuitem id="menu_academy_enrollments_my"
+        name="My Enrollments"
+        parent="menu_academy_enrollments_root"
+        action="academy_lab.action_academy_enrollment_my"
+        sequence="20"/>
+
+
+    <menuitem id="menu_academy_configuration_root"
+        name="Configuration"
+        parent="menu_academy_root"
+        groups="academy_lab.academy_group_manager"
+        sequence="30"/>
+
+    <menuitem id="menu_academy_configuration_categories"
+        name="Categories"
+        parent="menu_academy_configuration_root"
+        action="academy_lab.action_academy_course_categories"
+        groups="academy_lab.academy_group_manager"
+        sequence="10"/>
+
+</odoo>
