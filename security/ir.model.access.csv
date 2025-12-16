@@ -3,7 +3,7 @@ access_academy_course_student,academy.course student,model_academy_course,academ
 access_academy_course_instructor,academy.course instructor,model_academy_course,academy_lab.academy_group_instructor,1,1,1,1
 access_academy_course_manager,academy.course manager,model_academy_course,academy_lab.academy_group_manager,1,1,1,1
 
-access_academy_enrollment_student,academy.enrollment student,model_academy_enrollment,academy_lab.academy_group_student,1,1,1,0
+access_academy_enrollment_student,academy.enrollment student,model_academy_enrollment,academy_lab.academy_group_student,1,0,1,0
 access_academy_enrollment_instructor,academy.enrollment instructor,model_academy_enrollment,academy_lab.academy_group_instructor,1,0,0,0
 access_academy_enrollment_manager,academy.enrollment manager,model_academy_enrollment,academy_lab.academy_group_manager,1,1,1,1
 
