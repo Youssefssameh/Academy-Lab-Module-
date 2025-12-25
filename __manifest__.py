@@ -10,6 +10,8 @@
         'base',
         'mail',
         'contacts',
+        'sale',
+        'account',
     ],
     'data': [
         'security/academy_security.xml',
