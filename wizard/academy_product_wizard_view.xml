@@ -1,0 +1,20 @@
+<odoo>
+    <record id="product_wizard_form" model="ir.ui.view">
+        <field name="name">product wizard form</field>
+        <field name="model">academy.product.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name='name'/>
+                    <field name='price'/>
+                </group>
+                <footer>
+                    <button string='Confirm' type='object' name='create_product' class='btn-primary'/>
+                    <button string='Cancel' class='btn-secondary' special='cancel'/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+
+</odoo>

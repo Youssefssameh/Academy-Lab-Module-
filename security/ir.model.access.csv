@@ -10,3 +10,5 @@ access_academy_enrollment_manager,academy.enrollment manager,model_academy_enrol
 access_academy_course_category_student,academy.course.category student,model_academy_course_category,academy_lab.academy_group_student,1,0,0,0
 access_academy_course_category_instructor,academy.course.category instructor,model_academy_course_category,academy_lab.academy_group_instructor,1,0,0,0
 access_academy_course_category_manager,academy.course.category manager,model_academy_course_category,academy_lab.academy_group_manager,1,1,1,1
+
+access_academy_product_wizard_user,academy product wizard user,model_academy_product_wizard,,1,1,1,1

@@ -18,6 +18,8 @@
         'security/ir.model.access.csv',
         'security/academy_record_rules.xml',
         
+        'wizard/academy_product_wizard_view.xml',
+        
         'views/academy_actions.xml',
         'views/academy_course_views.xml',
         'views/academy_category_views.xml',

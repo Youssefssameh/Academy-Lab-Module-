@@ -55,6 +55,13 @@
         <field name="arch" type="xml">
             <form string="Course">
                 <header>
+                    <button name="%(product_wizard_action)d"
+                        type="action"
+                        string="Generate Product"
+                        class="btn-primary"
+                        context="{'default_name': name}" />
+
+
                     <button name="action_publish"
                             type="object"
                             string="Publish"
@@ -99,6 +106,7 @@
                             <field name="code"/>
                             <field name="category_id"/>
                             <field name="instructor_id"/>
+                            <field name="product_ids" readonly="1"/>
                         </group>
                         <group>
                             <field name="start_date"/>

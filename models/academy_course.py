@@ -32,6 +32,7 @@ class AcademyCourse(models.Model):
     is_full=fields.Boolean(string='Is Full', compute='_compute_is_full', store=True)
 
     instructor_name=fields.Char(string='Instructor Name', related='instructor_id.name', store=True) 
+    product_ids= fields.One2many('product.template', inverse_name='course_id',string='Products',readonly=True)
 
     _sql_constraints = [
         ('code_unique', 'unique("code")', 'Course code must be unique.')

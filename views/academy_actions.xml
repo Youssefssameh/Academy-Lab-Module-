@@ -41,4 +41,11 @@
         <field name="context">{'search_default_my_enrollments': 1}</field>
     </record>
 
+        <record id="product_wizard_action" model="ir.actions.act_window">
+        <field name="name">Generate Product</field>
+        <field name="res_model">academy.product.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+    
 </odoo>
