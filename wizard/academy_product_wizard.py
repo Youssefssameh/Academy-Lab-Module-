@@ -1,4 +1,5 @@
-from odoo import models, fields, api
+from odoo import models, fields
+from odoo.exceptions import UserError
 
 class AcademyProductWizard(models.TransientModel):
     _name='academy.product.wizard'
@@ -12,14 +13,14 @@ class AcademyProductWizard(models.TransientModel):
 
         active_id = self.env.context.get('active_id')
         if not active_id:
-            raise UserError(_("no active course found. Please open this wizard from a Course"))
+            raise UserError("no active course found. Please open this wizard from a Course")
 
         course = self.env['academy.course'].browse(active_id)
         if not course.exists():
-            raise UserError(_("Course not found"))
+            raise UserError("Course not found")
 
         if course.product_id:
-            raise UserError(_("This course already has a product "))
+            raise UserError("This course already has a product ")
 
         product_vals = {
             'name': self.name,
