@@ -26,6 +26,7 @@
         'views/academy_enrollment_views.xml',
         'views/academy_menus.xml',
         'views/res_partner_views.xml',
+        'views/product_template_view.xml',
     ],
     'installable': True,
     'application': True,
