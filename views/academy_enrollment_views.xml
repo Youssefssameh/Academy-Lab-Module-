@@ -77,6 +77,7 @@
                         <field name="grade"/>
                         <field name="attendance_percentage"/>
                         <field name="passed" readonly="1"/>
+                        <field name="invoice_id" readonly="1"/>
                     </group>
                 </group>
 
@@ -124,6 +125,15 @@
                 </header>
 
                 <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_invoice"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-file-text-o"
+                                invisible="not invoice_id">
+                            <field name="invoice_id" widget="statinfo" string="Invoice"/>
+                        </button>
+                    </div>
                     <group>
                         <group>
                             <field name="student_id" required="1"/>
@@ -135,6 +145,7 @@
                             <field name="grade"/>
                             <field name="attendance_percentage"/>
                             <field name="passed" readonly="1"/>
+                            <field name="invoice_id" readonly="1"/>
                         </group>
                     </group>
 
