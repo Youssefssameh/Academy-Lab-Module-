@@ -21,6 +21,7 @@ class AcademyEnrollment(models.Model):
     student_name=fields.Char(string='Student Name', related='student_id.name', store=True)
     course_name=fields.Char(string='Course Name', related='course_id.name', store=True)
     passed=fields.Boolean(string='Passed', compute='_compute_passed', store=True)
+    invoice_id = fields.Many2one('account.move', string='Invoice', readonly=True)
     _sql_constraints = [
         ('unique_enrollment', 'unique(student_id, course_id)', 'A student can only be enrolled once in a course.')
     ]
@@ -54,3 +55,15 @@ class AcademyEnrollment(models.Model):
     def action_complete(self):
         for enrollment in self:
             enrollment.state = 'completed'
+
+    def action_view_invoice(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Invoice',
+            'res_model': 'account.move',
+            'view_mode': 'form',
+            'res_id': self.invoice_id.id,
+            'target': 'current',
+        }
+
