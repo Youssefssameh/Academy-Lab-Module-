@@ -91,3 +91,12 @@ class AcademyCourse(models.Model):
     def action_cancel(self):
         self.state = 'cancelled'
 
+    def action_view_sales_orders(self):
+        self.ensure_one()
+        product = self.product_id
+        action = self.env.ref('sale.action_orders').read()[0]
+        action['domain'] = [('order_line.product_id', '=', product.id)]
+        action['context'] = {'search_default_my_sale_orders_filter': 0}
+        return action
+
+
