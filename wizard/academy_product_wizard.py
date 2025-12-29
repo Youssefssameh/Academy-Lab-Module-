@@ -10,6 +10,8 @@ class AcademyProductWizard(models.TransientModel):
 
     def create_product(self):
         self.ensure_one()
+        if self.price <= 0:
+            raise UserError("Product price must be greater than zero.")
 
         active_id = self.env.context.get('active_id')
         if not active_id:
