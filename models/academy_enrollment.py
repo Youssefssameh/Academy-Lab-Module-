@@ -64,6 +64,6 @@ class AcademyEnrollment(models.Model):
             'res_model': 'account.move',
             'view_mode': 'form',
             'res_id': self.invoice_id.id,
-            'target': 'current',
+            'target': 'new',
         }
 
