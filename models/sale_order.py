@@ -1,36 +1,50 @@
 from odoo import models
-
+from odoo.exceptions import UserError
 
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
     def action_confirm(self):
-        res = super().action_confirm()
-
         Enrollment = self.env['academy.enrollment']
 
         for order in self:
             student = order.partner_id
-
-            for line in order.order_line:
-                product = line.product_id
-                if not product:
+            courses = order.order_line.mapped('product_id.product_tmpl_id.course_id')
+            courses = courses.filtered(lambda c: c)
+            if not courses:
+                continue
+            existing = Enrollment.search([
+                ('student_id', '=', student.id),
+                ('course_id', 'in', courses.ids),
+            ])
+            if existing:
+                dup_courses = existing.mapped('course_id')
+                dup_names = "\n- " + "\n- ".join(dup_courses.mapped('name'))
+                raise UserError(
+                    "Cannot confirm this Sales Order because the customer is already enrolled in:\n"
+                    "%(courses)s\n\n"
+                    "Student: %(student)s"
+                ) % {
+                    'courses': dup_names,
+                    'student': student.name,
+                }
+        
+        res = super().action_confirm()
+        for order in self:
+            student = order.partner_id
+            courses = order.order_line.mapped('product_id.product_tmpl_id.course_id').filtered(lambda c: c)
+            existing_courses = Enrollment.search([
+                ('student_id', '=', student.id),
+                ('course_id', 'in', courses.ids),
+            ]).mapped('course_id')
+            existing_course_ids = set(existing_courses.ids)
+            for course in courses:
+                if course.id in existing_course_ids:
                     continue
-
-                course = product.product_tmpl_id.course_id
-                if not course:
-                    continue
-
-                exists = Enrollment.search([
-                    ('student_id', '=', student.id),
-                    ('course_id', '=', course.id),
-                ], limit=1)
-
-                if not exists:
-                    Enrollment.create({
-                        'student_id': student.id,
-                        'course_id': course.id,
-                        'state': 'draft',
-                    })
+                Enrollment.create({
+                    'student_id': student.id,
+                    'course_id': course.id,
+                    'state': 'draft',
+                })
 
         return res
