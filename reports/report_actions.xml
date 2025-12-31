@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_report_course_certificate" model="ir.actions.report">
+        <field name="name">Course Certificate</field>
+        <field name="model">academy.enrollment</field>
+        <field name="report_type">qweb-html</field>
+        <field name="report_name">academy_lab.report_course_certificate</field>
+        <field name="report_file">academy_lab.report_course_certificate</field>
+        <field name="print_report_name">'Certificate - %s' % (object.student_name or object.display_name)</field>
+        <field name="binding_model_id" ref="academy_lab.model_academy_enrollment"/>
+        <field name="binding_type">report</field>
+    </record>
+
+</odoo>

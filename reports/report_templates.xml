@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="report_course_certificate">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="academy_lab.report_course_certificate_content"/>
+            </t>
+        </t>
+    </template>
+
+    <template id="report_course_certificate_content">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+
+                    <style type="text/css">
+                        .cert-wrap{border: 6px solid #1f2937;padding: 28px;border-radius: 10px;}
+                        .cert-inner{border: 2px solid #9ca3af;padding: 22px;border-radius: 8px;}
+                        .cert-title{text-align:center;font-size:34px;font-weight:700;letter-spacing:2px;margin:10px 0 6px;}
+                        .cert-subtitle{text-align:center;color:#6b7280;margin:0 0 22px;font-size:14px;}
+                        .cert-main{text-align:center;margin:20px 0 18px;font-size:16px;line-height:1.8;}
+                        .cert-name{font-family: 'IndieFlower-Regular';font-size:26px;font-weight:700;margin:8px 0;text-decoration:underline;}
+                        .cert-course{font-size:18px;font-weight:600;}
+                        .cert-meta{margin-top:18px;width:100%;border-collapse:collapse;}
+                        .cert-meta td{padding:8px 6px;vertical-align:top;}
+                        .cert-label{color:#6b7280;font-size:12px;text-transform:uppercase;letter-spacing:1px;}
+                        .cert-value{font-size:14px;font-weight:600;}
+                        .cert-sign{margin-top:30px;width:100%;}
+                        .cert-sign td{width:50%;text-align:center;padding-top:28px;}
+                        .sign-line{border-top:1px solid #111827;margin:0 40px 6px;}
+                    </style>
+
+                    <div class="cert-wrap">
+                        <div class="cert-inner">
+
+                            <div class="cert-title">CERTIFICATE</div>
+                            <div class="cert-subtitle">OF COMPLETION</div>
+
+                            <div class="cert-main">
+                                This certificate is proudly presented to
+                                <div class="cert-name">
+                                    <span t-field="doc.student_id.name"/>
+                                </div>
+                                for successfully completing the course
+                                <div class="cert-course">
+                                    <span t-field="doc.course_id.name"/>
+                                </div>
+                            </div>
+
+                            <table class="cert-meta">
+                                <tr>
+                                    <td>
+                                        <div class="cert-label">Completion date</div>
+                                        <div class="cert-value">
+                                            <span t-field="doc.enrollment_date" t-options='{"widget":"date"}'/>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="cert-label">Grade</div>
+                                        <div class="cert-value"><span t-field="doc.grade"/></div>
+                                    </td>
+                                    <td>
+                                        <div class="cert-label">Instructor</div>
+                                        <div class="cert-value"><span t-field="doc.course_id.instructor_id.name"/></div>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <table class="cert-sign">
+                                <tr>
+                                    <td>
+                                        <div class="sign-line"></div>
+                                        <div class="cert-label">Instructor</div>
+                                    </td>
+                                    <td>
+                                        <div class="sign-line"></div>
+                                        <div class="cert-label">Academy Manager</div>
+                                    </td>
+                                </tr>
+                            </table>
+
+                        </div>
+                    </div>
+
+                </div>
+            </t>
+        </t>
+    </template>
+
+</odoo>
