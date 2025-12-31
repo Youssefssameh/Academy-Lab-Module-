@@ -104,6 +104,14 @@
                     <field name="state"
                         widget="statusbar"
                         statusbar_visible="draft,confirmed,completed,cancelled"/>
+                    
+                    <button
+                        name="%(academy_lab.action_report_course_certificate)d"
+                        type="action"
+                        string="Print Certificate"
+                        class="btn-primary"
+                        invisible="(not passed) or (state != 'completed')"
+                    />
 
                     <button name="action_confirm"
                             string="Confirm"
