@@ -12,4 +12,14 @@
         <field name="binding_type">report</field>
     </record>
 
+    <record id="action_report_course_enrollment" model="ir.actions.report">
+        <field name="name">Course Enrollments</field>
+        <field name="model">academy.course</field>
+        <field name="report_type">qweb-html</field>
+        <field name="report_name">academy_lab.report_course_enrollment</field>
+        <field name="report_file">academy_lab.report_course_enrollment</field>
+        <field name="print_report_name">'Enrollments report for - %s' % (object.name or object.display_name)</field>
+        <field name="binding_model_id" ref="academy_lab.model_academy_course"/>
+        <field name="binding_type">report</field>
+    </record>
 </odoo>

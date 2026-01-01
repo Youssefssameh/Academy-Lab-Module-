@@ -55,6 +55,12 @@
         <field name="arch" type="xml">
             <form string="Course">
                 <header>
+                    <button
+                        name="%(academy_lab.action_report_course_enrollment)d"
+                        type="action"
+                        string="Enrollment Report"
+                        class="btn-primary"
+                    />
                     <button name="%(product_wizard_action)d"
                         type="action"
                         string="Generate Product"
