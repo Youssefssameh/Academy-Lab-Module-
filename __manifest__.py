@@ -19,11 +19,11 @@
         'security/academy_record_rules.xml',
 
         'wizard/academy_product_wizard_view.xml',
-
+        'wizard/enrollment_report_wizard_view.xml',
         # Reports (must be loaded before views that reference them by xmlid)
         'reports/report_actions.xml',
         'reports/report_templates.xml',
-
+        
         # Views
         'views/academy_actions.xml',
         'views/academy_course_views.xml',
