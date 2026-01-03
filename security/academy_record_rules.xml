@@ -25,13 +25,13 @@
     </record>
 
     <!-- Instructors: enrollments (read only)-->
-    <record id="rule_enrollment_instructor_readonly_all" model="ir.rule">
-        <field name="name">academy.enrollment: instructor: read only</field>
+    <record id="rule_enrollment_instructor_read/write" model="ir.rule">
+        <field name="name">academy.enrollment: instructor: own courses only (read/write)</field>
         <field name="model_id" ref="model_academy_enrollment"/>
-        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="domain_force">[('course_id.instructor_id', '=', user.partner_id.id)]</field>
         <field name="groups" eval="[(4, ref('academy_lab.academy_group_instructor'))]"/>
         <field name="perm_read" eval="1"/>
-        <field name="perm_write" eval="0"/>
+        <field name="perm_write" eval="1"/>
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
