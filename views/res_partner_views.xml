@@ -7,8 +7,7 @@
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
 
-            <xpath expr="//div[contains(@class,'oe_button_box')]" position="inside">
-
+            <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
 
                 <button type="action"
                         name="%(academy_lab.action_academy_enrollment_all)d"
@@ -16,7 +15,6 @@
                         icon="fa-graduation-cap">
                     <field name="total_courses_enrolled" widget="statinfo" string="Enrolled"/>
                 </button>
-
 
                 <button type="action"
                         name="%(academy_lab.action_academy_courses)d"
@@ -27,13 +25,21 @@
 
             </xpath>
 
-
             <xpath expr="//notebook" position="inside">
                 <page string="Academy">
                     <group>
                         <field name="is_student"/>
                         <field name="is_instructor"/>
                     </group>
+                    
+                    <div class="oe_button_box" name="button_box">
+                        <button name="%(academy_lab.report_student_transcript)d"
+                                type="action"
+                                string="Print Transcript"
+                                class="oe_stat_button"
+                                icon="fa-file-text-o"
+                                invisible="not is_student"/>
+                    </div>
 
                     <group string="Totals">
                         <field name="total_courses_enrolled" readonly="1"/>

@@ -35,5 +35,15 @@
     </record>
 
 
+    <record id="report_student_transcript" model="ir.actions.report">
+        <field name="name">Student Transcript</field>
+        <field name="model">res.partner</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">academy_lab.student_transcript_template</field>
+        <field name="report_file">academy_lab.student_transcript_template</field>
+        <field name="print_report_name">'Transcript_%s' % (object.name)</field>
+    </record>
+
+
 
 </odoo>

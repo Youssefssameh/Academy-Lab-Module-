@@ -13,3 +13,4 @@ access_academy_course_category_manager,academy.course.category manager,model_aca
 
 access_academy_product_wizard_user,academy product wizard user,model_academy_product_wizard,,1,1,1,1
 access_academy_enrollment_report_wizard,academy.enrollment.report.wizard,model_academy_enrollment_report_wizard,,1,1,1,1
+access_academy_enrollment_student,academy.enrollment.student,model_academy_enrollment,,1,0,0,0
