@@ -41,6 +41,14 @@ class SaleOrder(models.Model):
             for course in courses:
                 if course.id in existing_course_ids:
                     continue
+                # will be done in future
+                # if course.available_seats <= 0:
+                #     raise UserError(
+                #         "Cannot enroll student %(student)s in course %(course)s because there are no seats available. \n Please remove the course %(course)s from the order."
+                #     ) % {
+                #         'student': student.name,
+                #         'course': course.name,
+                #     }
                 Enrollment.create({
                     'student_id': student.id,
                     'course_id': course.id,
