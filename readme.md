@@ -1,181 +1,579 @@
-# Academy Lab (academy_lab) — Odoo 18 Addon
+<div align="center">
 
-Training Academy Management System built as an Odoo 18 addon. [file:2]  
-The module manages Courses, Categories, and Enrollments with role-based security, state workflows, computed fields, validations, and commercial integration with Sales & Invoicing. [file:2]
+# 🎓 Academy Lab - Odoo 18
 
----
+### Complete Training Academy Management System
 
-## Features
+[![Odoo Version](https://img.shields.io/badge/Odoo-18.0-blue.svg)](https://www.odoo.com)
+[![License](https://img.shields.io/badge/License-LGPL--3-green.svg)](https://www.gnu.org/licenses/lgpl-3.0)
+[![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org)
+[![Status](https://img.shields.io/badge/Status-Production%20Ready-brightgreen.svg)]()
 
-### Courses (`academy.course`)
-- Course lifecycle states: Draft → Published → In Progress → Done / Cancelled.
-- Computed fields (stored):
-  - Enrolled Count (based on confirmed enrollments).
-  - Available Seats (`max_students - enrolled_count`).
-  - Is Full (`available_seats <= 0`).
-- Constraints:
-  - End date must be >= start date.
-  - `max_students` must be > 0.
-  - Course code is unique and normalized to uppercase.
-- UI:
-  - List view with decorations.
-  - Form view with statusbar, smart button for enrollments, and chatter.
-  - Kanban view.
-- Commercial fields:
-  - `product_id` (Many2one to `product.product`, readonly) to link the course to a sellable Service Product. [file:2]
-- Smart buttons:
-  - **Sales**: opens Sales Orders that contain the product linked to this course. [file:2]
+*A comprehensive academy management addon for Odoo 18 with advanced features including course management, enrollment workflows, commercial integration, and intelligent reporting.*
 
-### Categories (`academy.course.category`)
-- Stores category details and related courses.
-- Computed stored counter of courses.
-
-### Enrollments (`academy.enrollment`)
-- Enrollment workflow: Draft → Confirmed → Completed / Cancelled.
-- Validations:
-  - Prevent confirming enrollment when the course is full.
-  - Prevent duplicate enrollments (same student + same course) via SQL constraint.
-- Computed stored field:
-  - Passed = (`grade >= 60`) AND (`attendance >= 75`).
-- Commercial fields:
-  - `invoice_id` (Many2one to `account.move`, readonly) links the enrollment to the posted invoice. [file:2]
-- UI:
-  - List, Search (My Enrollments / Confirmed / Completed), and Form with statusbar and chatter.
-- Smart buttons:
-  - **Invoice**: opens the related Invoice form view; visible only if `invoice_id` is set. [file:2]
-
-### Partner Extension (`res.partner`)
-- Flags:
-  - Is Student
-  - Is Instructor
-- Relations:
-  - Student Enrollments
-  - Instructor Courses
-- Smart buttons:
-  - Total Courses Enrolled
-  - Total Courses Teaching
-- Academy tab added to partner form.
+[Features](#-features) • [Installation](#-installation) • [Documentation](#-documentation) • [Testing](#-testing)
 
 ---
 
-## Commercial Integration (Sales & Invoicing)
+</div>
 
-This module integrates Courses with Odoo Sales and Accounting to support selling courses and validating enrollments based on payments. [file:2]
+## 📋 Table of Contents
 
-### Configuration
-- Update `__manifest__.py` dependencies to include:
-  - `sale`
-  - `account` [file:2]
-
-### Product Generation Wizard
-- Wizard: `academy.product.wizard` (TransientModel) with fields:
-  - `name` (Char, required)
-  - `price` (Float, required) [file:2]
-- Course form header button: **Generate Product**
-  - Opens the wizard in a popup (`target="new"`).
-  - Prefills the wizard `name` from the course name. [file:2]
-- Wizard behavior (Create):
-  - Creates a new `product.product` as a Service with the provided name and list price.
-  - Links product ↔ course via:
-    - `academy.course.product_id`
-    - `product.template.course_id` [file:2]
-
-### Automated Enrollment on Sales Confirmation
-- Override `sale.order.action_confirm`:
-  - After confirmation, for each order line whose product is linked to a course, create a new `academy.enrollment`.
-  - Enrollment is created for the Sales Order customer (`partner_id`) and starts in draft (or a custom unpaid state).
-  - Prevent duplicate enrollments for the same student in the same course. [file:2]
-
-### Enrollment Confirmation on Invoice Post
-- Override `account.move.action_post`:
-  - After posting, check invoice lines for products linked to courses.
-  - Find the corresponding enrollment (matching Student + Course).
-  - Set enrollment state to `confirmed` and link the posted invoice into `invoice_id`. [file:2]
+- [Overview](#-overview)
+- [Key Features](#-key-features)
+- [Module Architecture](#-module-architecture)
+- [Installation Guide](#-installation-guide)
+- [Configuration](#-configuration)
+- [User Guide](#-user-guide)
+- [Security & Access Control](#-security--access-control)
+- [Commercial Integration](#-commercial-integration)
+- [Reports](#-reports)
+- [Testing](#-testing)
+- [Troubleshooting](#-troubleshooting)
 
 ---
 
-## Module Info
-- Name: `academy_lab`
-- Version: `18.0.1.0.0`
-- Dependencies: `base`, `mail`, `contacts`, `sale`, `account`. [file:2]
+## 🌟 Overview
+
+**Academy Lab** is a professional Odoo 18 addon designed to manage training academies, educational institutions, and course providers. It provides a complete solution for:
+
+- 📚 **Course Management** - Create, publish, and manage courses with lifecycle states
+- 👥 **Enrollment System** - Track student enrollments with automated workflows
+- 💰 **Sales Integration** - Sell courses as products with automated enrollment
+- 📊 **Advanced Reporting** - Generate enrollment reports and student transcripts
+- 🔒 **Role-Based Security** - Fine-grained access control for students, instructors, and managers
+- 📧 **Communication** - Built-in chatter for collaboration and tracking
 
 ---
 
-## Installation
-1. Copy `academy_lab` into your Odoo addons path.
-2. Restart Odoo server.
-3. Activate Developer Mode.
-4. Apps → Update Apps List.
-5. Install **Academy Lab**.
+## 🚀 Key Features
+
+### Core Functionality
+
+<table>
+<tr>
+<td width="50%">
+
+#### 📚 Course Management
+- Multi-state lifecycle
+- Automatic seat calculation
+- Course categorization
+- Instructor assignment
+- Smart buttons
+- Kanban & List views
+- Built-in chatter
+
+</td>
+<td width="50%">
+
+#### 🎓 Enrollment System
+- Automated workflows
+- Grade tracking
+- Attendance tracking
+- Pass/Fail computation
+- Duplicate prevention
+- Capacity validation
+- Invoice linking
+
+</td>
+</tr>
+<tr>
+<td width="50%">
+
+#### 👤 Partner Integration
+- Student & Instructor flags
+- Enrollment history
+- Teaching portfolio
+- Academy tab
+- Smart buttons
+- Transcript printing
+
+</td>
+<td width="50%">
+
+#### 💼 Commercial Features
+- Product generation wizard
+- Auto-enrollment on SO
+- Auto-confirm on invoice
+- Sales integration
+- Invoice linking
+- Revenue tracking
+
+</td>
+</tr>
+</table>
+
+### 📊 Advanced Reporting
+
+| Report | Description | Access |
+|--------|-------------|--------|
+| **Enrollment Report** | Date-filtered with statistics | Manager, Instructor |
+| **Student Transcript** | Academic record with GPA | Student (own), Manager (all) |
 
 ---
 
-## Menu Structure
-Academy (root)
-- Courses
-  - Courses
-  - Categories
-- Enrollments
-  - All Enrollments
-  - My Enrollments
-- Configuration (Manager only)
-  - (Optional) Configuration submenus for manager
+## 🏗️ Module Architecture
+
+### File Structure
+
+```
+academy_lab/
+├── __init__.py
+├── __manifest__.py
+├── README.md
+│
+├── models/
+│   ├── __init__.py
+│   ├── academy_course.py
+│   ├── academy_course_category.py
+│   ├── academy_enrollment.py
+│   ├── res_partner.py
+│   ├── product_template.py
+│   ├── sale_order.py
+│   └── account_move.py
+│
+├── wizard/
+│   ├── __init__.py
+│   ├── academy_product_wizard.py
+│   ├── academy_product_wizard_view.xml
+│   ├── enrollment_report_wizard.py
+│   └── enrollment_report_wizard_view.xml
+│
+├── reports/
+│   ├── __init__.py
+│   ├── report_actions.xml
+│   ├── report_templates.xml
+│   ├── enrollment_report.py
+│   ├── student_transcript_report.py
+│   └── student_transcript_template.xml
+│
+├── views/
+│   ├── academy_actions.xml
+│   ├── academy_course_views.xml
+│   ├── academy_category_views.xml
+│   ├── academy_enrollment_views.xml
+│   └── res_partner_views.xml
+│
+├── security/
+│   ├── academy_security.xml
+│   ├── ir.model.access.csv
+│   └── academy_record_rules.xml
+│
+└── static/
+    └── description/
+        ├── icon.png
+        └── index.html
+```
+
+### Data Model
+
+```
+res.partner                    academy.course
+┌──────────────┐              ┌───────────────┐
+│ Students     │◄─────────────┤ Enrollments   │
+│ Instructors  │  student_id  │ Courses       │
+│              │              │               │
+│ • is_student │              │ • name        │
+│ • enrollments│              │ • code        │
+│ • courses    │              │ • max_students│
+└──────┬───────┘              │ • state       │
+       │                      │ • product_id  │
+       │                      └───────┬───────┘
+       │ instructor_id                │
+       └──────────────────────────────┘
+
+academy.enrollment            product.template
+┌───────────────┐            ┌──────────────┐
+│ • student_id  │            │ Service      │
+│ • course_id   │◄───────────┤ Products     │
+│ • grade       │ product_id │              │
+│ • attendance  │            │ • course_id  │
+│ • passed      │            │ • list_price │
+│ • invoice_id  │            └──────────────┘
+│ • state       │
+└───────┬───────┘
+        │
+        │                   sale.order
+        │                   ┌──────────┐
+        │                   │ Orders   │
+        │                   └────┬─────┘
+        │                        │
+        │                   account.move
+        └───────────────────┤ Invoices │
+               invoice_id   └──────────┘
+```
 
 ---
 
-## Security & Access Control
+## 📦 Installation Guide
 
-### Groups
-- Academy / Student
-- Academy / Instructor (implies Student)
-- Academy / Manager (implies Instructor)
+### Prerequisites
 
-### Access Rules Summary
-- Students:
-  - Can only view published courses.
-  - Can create/read/update only their own enrollments.
-- Instructors:
-  - Can manage courses.
-  - Can read enrollments (read-only).
-- Managers:
-  - Full access to all models and configuration menu.
+- Odoo 18.0+
+- Python 3.10+
+- Required modules: base, mail, contacts, sale, account
 
-> Record Rules enforce data visibility; Access Rights (ACL) enforce CRUD permissions.
+### Installation Steps
 
----
+#### 1️⃣ Copy Module
 
-## Quick Testing Checklist
+```bash
+cd /path/to/odoo/addons/
+cp -r academy_lab/ .
+```
 
-Create 3 users:
-- User A: Student
-- User B: Instructor
-- User C: Manager
+#### 2️⃣ Restart Odoo
 
-Test scenarios:
-- Student can only see published courses.
-- Student can only see/edit own enrollments.
-- Instructor can create/edit courses but cannot edit enrollments.
-- Manager can see Configuration menu and has full CRUD.
+```bash
+docker compose restart
+# OR
+sudo systemctl restart odoo
+```
 
-Course full scenario:
-- Set `max_students = 1`
-- Confirm 1 enrollment
-- Confirm 2nd enrollment → must fail
+#### 3️⃣ Install
 
-Duplicate enrollment:
-- Create same student + same course twice → must fail
-
-Passed computation:
-- `grade = 60` & `attendance = 75` → `passed = True`
-- Decrease any value below threshold → `passed = False`
-
-Commercial flow:
-- Create a Course → Generate Product.
-- Create a Sales Order with that product → Confirm SO → Draft enrollment created.
-- Create invoice from SO → Post invoice → Enrollment becomes Confirmed and `invoice_id` is linked. [file:2]
+1. Settings → Activate Developer Mode
+2. Apps → Update Apps List
+3. Search "Academy Lab"
+4. Click Install
 
 ---
 
-## Notes
-- All views use Odoo 18 `<list>` syntax (not `<tree>`).
-- Chatter is enabled on courses and enrollments via `mail.thread` and `mail.activity.mixin`.
+## ⚙️ Configuration
+
+### Create User Groups
+
+| User | Group | Email |
+|------|-------|-------|
+| Ahmed | Academy / Student | student@test.com |
+| Sara | Academy / Instructor | instructor@test.com |
+| Admin | Academy / Manager | manager@test.com |
+
+### Create Sample Course
+
+```
+Name: Python Programming
+Code: PY101
+Max Students: 20
+State: Published
+```
+
+---
+
+## 👥 User Guide
+
+### For Students
+
+#### View Courses
+- Academy → Courses (Published only)
+
+#### Enroll
+- Via Sales Order → Auto-enrollment
+
+#### Check Progress
+- Academy → My Enrollments
+- View grade, attendance, pass status
+
+#### Print Transcript
+- Contacts → Self → Academy Tab → Print Transcript
+
+---
+
+### For Instructors
+
+#### Manage Courses
+- Create courses
+- Generate products
+- Track enrollments
+
+#### Grade Students
+- Academy → Enrollments
+- Enter grade & attendance
+- Passed auto-computed: (grade ≥ 60) AND (attendance ≥ 75)
+
+---
+
+### For Managers
+
+#### Full Access
+- All CRUD operations
+- Configuration menu
+- All reports
+- All transcripts
+
+---
+
+## 🔒 Security & Access Control
+
+### Groups Hierarchy
+
+```
+Academy / Manager
+  ↓ implies
+Academy / Instructor
+  ↓ implies
+Academy / Student
+  ↓ implies
+Employee
+```
+
+### Access Matrix
+
+| Model | Student | Instructor | Manager |
+|-------|---------|------------|---------|
+| Course | Read | Full | Full |
+| Category | Read | Read | Full |
+| Enrollment | Read+Create | Read+Write | Full |
+
+### Record Rules
+
+- Students: Published courses only, own enrollments only
+- Instructors: All courses, all enrollments (read-only)
+- Managers: Everything
+
+---
+
+## 💼 Commercial Integration
+
+### Flow
+
+```
+1. Course → Generate Product
+   ↓
+2. Sales Order (with product) → Confirm
+   ↓ AUTO-CREATE
+3. Enrollment (Draft state)
+   ↓
+4. Invoice → Post
+   ↓ AUTO-CONFIRM
+5. Enrollment (Confirmed + invoice linked)
+```
+
+### Technical Details
+
+**sale_order.py - action_confirm override:**
+- Loops through order lines
+- Creates enrollment for products linked to courses
+- Prevents duplicates
+
+**account_move.py - action_post override:**
+- Loops through invoice lines
+- Finds matching enrollment
+- Confirms enrollment + links invoice
+
+---
+
+## 📊 Reports
+
+### 1️⃣ Enrollment Report
+
+**Access:** Academy → Enrollments → Print Report
+
+**Features:**
+- Date range filter
+- Course filter
+- Statistics per course
+- PDF output
+
+**Implementation:**
+- Wizard: TransientModel
+- Report: AbstractModel
+- Template: QWeb
+
+---
+
+### 2️⃣ Student Transcript
+
+**Access:** Partner → Academy Tab → Print Transcript
+
+**Features:**
+- All enrollments
+- Statistics (total courses, avg grade)
+- Top 3 courses (by grade)
+- Full history
+
+**Access Control:**
+- Students: Own only
+- Managers: Any student
+- Built-in security check in AbstractModel
+
+**Code Example:**
+
+```python
+class StudentTranscriptReport(models.AbstractModel):
+    _name = 'report.academy_lab.student_transcript_template'
+
+    def _get_report_values(self, docids, data=None):
+        # Security check
+        if self.env.user.has_group('academy_lab.academy_group_student'):
+            for student in students:
+                if student.id != self.env.user.partner_id.id:
+                    raise AccessError("Own transcript only!")
+
+        # Calculate stats
+        enrollments = ...
+        avg_grade = ...
+        top_3 = ...
+
+        return {...}
+```
+
+---
+
+## 🧪 Testing
+
+### Course Constraints
+
+```python
+# End date validation
+course.end_date < course.start_date  # ❌ Error
+
+# Max students > 0
+course.max_students = 0  # ❌ Error
+
+# Unique code
+duplicate_code  # ❌ IntegrityError
+```
+
+### Enrollment Validation
+
+```python
+# Course full
+course.max_students = 1
+confirm_enrollment_1  # ✅
+confirm_enrollment_2  # ❌ "Course is full"
+
+# Duplicate
+same_student + same_course  # ❌ IntegrityError
+```
+
+### Computed Fields
+
+```python
+# Passed
+grade = 60, attendance = 75  # ✅ passed = True
+grade = 59, attendance = 75  # ❌ passed = False
+```
+
+### Commercial Flow
+
+```python
+1. Create Course
+2. Generate Product
+3. Create SO → Confirm  # ✅ Enrollment created (draft)
+4. Create Invoice → Post  # ✅ Enrollment confirmed
+5. Check enrollment.invoice_id  # ✅ Linked
+```
+
+---
+
+## 🐛 Troubleshooting
+
+### Module Not Appearing
+```bash
+# Check path
+ls /path/to/addons/ | grep academy_lab
+
+# Restart
+docker compose restart
+
+# Update list (Developer Mode)
+Apps → Update Apps List
+```
+
+### Access Denied
+- Check user groups assignment
+- Verify record rules
+- Check access rights CSV
+
+### Report Not Generating
+```bash
+# Check wkhtmltopdf
+which wkhtmltopdf
+
+# Install if missing
+sudo apt-get install wkhtmltopdf
+```
+
+### Commercial Integration
+- Verify sale & account modules installed
+- Check method overrides
+- Verify product.course_id link
+
+---
+
+## 📚 API Reference
+
+### Course Model
+
+```python
+academy.course
+- name (Char, required)
+- code (Char, required, unique)
+- max_students (Integer)
+- state (Selection)
+- enrolled_count (Integer, computed, stored)
+- available_seats (Integer, computed, stored)
+- is_full (Boolean, computed, stored)
+
+Methods:
+- action_publish()
+- action_start()
+- action_done()
+- action_cancel()
+```
+
+### Enrollment Model
+
+```python
+academy.enrollment
+- student_id (Many2one res.partner, required)
+- course_id (Many2one academy.course, required)
+- grade (Float)
+- attendance_percentage (Float)
+- passed (Boolean, computed, stored)
+- invoice_id (Many2one account.move)
+- state (Selection)
+
+Methods:
+- action_confirm()
+- action_complete()
+- action_cancel()
+```
+
+---
+
+## 📝 Changelog
+
+### v18.0.1.0.0 (2026-01-03)
+
+#### Features
+- Complete course management
+- Enrollment workflows
+- Commercial integration
+- Enrollment report with wizard
+- Student transcript with access control
+- Role-based security
+- Partner extension
+- Smart buttons
+
+#### Security
+- Record rules
+- Access rights
+- Transcript access control
+
+#### Reports
+- Enrollment Report (wizard)
+- Student Transcript
+- QWeb templates
+- Statistics
+
+
+
+<div align="center">
+
+### ⭐ Star this repository if you find it useful! ⭐
+
+**Made with ❤️ for Odoo 18**
+
+</div>
