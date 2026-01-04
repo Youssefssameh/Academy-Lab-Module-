@@ -7,20 +7,23 @@ class StudentTranscriptReport(models.AbstractModel):
 
     def _get_report_values(self, docids, data=None):
         students = self.env['res.partner'].browse(docids)
+
+        user = self.env.user
+        is_student = user.has_group('academy_lab.academy_group_student')
+        is_instructor = user.has_group('academy_lab.academy_group_instructor')
+        is_manager = user.has_group('academy_lab.academy_group_manager')
+
+
+        if is_student and not (is_instructor or is_manager):
+            students = students.filtered(lambda s: s.id == user.partner_id.id)
+            if not students:
+                raise AccessError(
+                    "You can only print your own transcript."
+                )
         
-        # Access Control: Student يشوف transcript بتاعه بس
-        if self.env.user.has_group('academy_lab.academy_group_student'):
-            for student in students:
-                if student.id != self.env.user.partner_id.id:
-                    raise AccessError(
-                        "You are not allowed to print transcripts for other students. "
-                        "You can only print your own transcript."
-                    )
-        
-        # الحسابات
         result = []
         for student in students:
-            # جيب كل enrollments للطالب ده
+            
             enrollments = self.env['academy.enrollment'].search([
                 ('student_id', '=', student.id)
             ], order='enrollment_date desc')
@@ -30,7 +33,7 @@ class StudentTranscriptReport(models.AbstractModel):
             grades = [e.grade for e in enrollments if e.grade]
             avg_grade = sum(grades) / len(grades) if grades else 0.0
             
-            # Top 3 courses (أعلى grades)
+            
             top_3 = enrollments.filtered(lambda e: e.grade).sorted(
                 key=lambda e: e.grade, reverse=True
             )[:3]
