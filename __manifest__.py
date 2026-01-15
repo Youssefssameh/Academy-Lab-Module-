@@ -12,6 +12,8 @@
         'contacts',
         'sale',
         'account',
+        'report_xlsx',
+        'report_xlsx_helper'
     ],
     'data': [
         'security/academy_security.xml',

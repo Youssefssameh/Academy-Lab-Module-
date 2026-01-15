@@ -12,6 +12,7 @@
         <field name="binding_type">report</field>
     </record>
 
+
     <record id="action_report_course_enrollment" model="ir.actions.report">
         <field name="name">Course Enrollments</field>
         <field name="model">academy.course</field>
@@ -22,7 +23,6 @@
         <field name="binding_model_id" ref="academy_lab.model_academy_course"/>
         <field name="binding_type">report</field>
     </record>
-
 
 
     <record id="report_enrollment_by_filters" model="ir.actions.report">
@@ -44,6 +44,16 @@
         <field name="print_report_name">'Transcript_%s' % (object.name)</field>
     </record>
 
+
+    <record id="action_enrollment_xlsx_report" model="ir.actions.report">
+        <field name="name">Enrollment XLSX</field>
+        <field name="model">academy.enrollment</field>
+        <field name="report_type">xlsx</field>
+        <field name="report_name">academy_lab.enrollment_xlsx_report</field>
+        <field name="report_file">enrollment_report</field>
+        <field name="binding_model_id" ref="model_academy_enrollment"/>
+        <field name="binding_type">report</field>
+    </record>
 
 
 </odoo>
