@@ -13,12 +13,15 @@
         'sale',
         'account',
         'report_xlsx',
-        'report_xlsx_helper'
+        'report_xlsx_helper',
+        'website',
     ],
     'data': [
         'security/academy_security.xml',
         'security/ir.model.access.csv',
         'security/academy_record_rules.xml',
+
+        'controllers/template.xml',
 
         'wizard/academy_product_wizard_view.xml',
         'wizard/enrollment_report_wizard_view.xml',

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="course_enrollments_dashboard" name="Course Enrollments Dashboard">
+        <t t-call="website.layout">
+            <div class="container my-4">
+
+                <h2 class="mb-3">
+                    Course: <t t-esc="course.name"/>
+                </h2>
+
+                <!-- Stats -->
+                <div class="row g-3 mb-4">
+                    <div class="col-md-3">
+                        <div class="card p-3">
+                            <div class="fw-bold">Total</div>
+                            <div class="display-6"><t t-esc="total"/></div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="card p-3">
+                            <div class="fw-bold">Draft</div>
+                            <div class="display-6"><t t-esc="draft_count"/></div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="card p-3">
+                            <div class="fw-bold">Confirmed</div>
+                            <div class="display-6"><t t-esc="confirmed_count"/></div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="card p-3">
+                            <div class="fw-bold">Cancelled</div>
+                            <div class="display-6"><t t-esc="cancelled_count"/></div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="card p-3">
+                            <div class="fw-bold">Completed</div>
+                            <div class="display-6"><t t-esc="completed_count"/></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Latest 10 enrollments -->
+                <div class="card">
+                    <div class="card-header fw-bold">
+                        Latest 10 Enrollments
+                    </div>
+
+                    <div class="card-body p-0">
+                        <table class="table mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Student</th>
+                                    <th>Status</th>
+                                    <th>Create Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-if="enrollments">
+                                    <t t-foreach="enrollments" t-as="enr">
+                                        <tr>
+                                            <td><t t-esc="enr.student_id.name"/></td>
+                                            <td><t t-esc="enr.state"/></td>
+                                            <td><t t-esc="enr.create_date"/></td>
+                                        </tr>
+                                    </t>
+                                </t>
+                                <t t-else="">
+                                    <tr>
+                                        <td colspan="3" class="text-center p-3">
+                                            No enrollments yet.
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </t>
+    </template>
+</odoo>

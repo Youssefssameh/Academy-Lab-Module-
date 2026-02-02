@@ -47,5 +47,11 @@
         <field name="view_mode">form</field>
         <field name="target">new</field>
     </record>
-    
+    <!-- dummy -->
+    <record id="enrollments" model="ir.actions.act_window">
+        <field name="name">Enrollments</field>
+        <field name="res_model">academy.enrollment</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
 </odoo>
