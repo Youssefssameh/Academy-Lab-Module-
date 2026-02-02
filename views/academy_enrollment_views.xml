@@ -101,6 +101,10 @@
                     </div>
                     <group>
                         <group>
+                            <field name="ui_hint" readonly="1"/>
+                        </group>
+                        
+                        <group>
                             <field name="student_id" required="1"/>
                             <field name="course_id" required="1"/>
                             <field name="enrollment_date"/>

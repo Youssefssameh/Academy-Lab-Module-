@@ -26,6 +26,46 @@ class AcademyEnrollment(models.Model):
         ('unique_enrollment', 'unique(student_id, course_id)', 'A student can only be enrolled once in a course.')
     ]
     
+    ui_hint = fields.Char(string="Hint", readonly=True)  
+
+    @api.onchange('grade', 'attendance_percentage')
+    def _onchange_grade_attendance_ui(self):
+        """
+        Provides UI hints based on grade and attendance percentage.
+
+        - If either grade or attendance is missing, prompts user to enter both.
+        - If grade < 60, warns that grade is below passing threshold.
+        - If attendance < 75%, warns that attendance is below required percentage.
+        - If both are satisfactory, indicates that the student will pass if saved.
+        - If values are out of range (not between 0 and 100), shows a warning pop-up.
+
+        """
+        for rec in self:
+            g = rec.grade
+            a = rec.attendance_percentage
+
+            # initial hint
+            if g in (False, None) or a in (False, None):
+                rec.ui_hint = "Enter grade + attendance to see result"
+                continue
+
+            # main hints
+            if g < 60:
+                rec.ui_hint = "⚠ Grade is below 60"
+            elif a < 75:
+                rec.ui_hint = "⚠ Attendance is below 75%"
+            else:
+                rec.ui_hint = "✅ Looks good: will PASS if saved"
+
+            # warning pop-up
+            if (g < 0 or g > 100) or (a < 0 or a > 100):
+                return {
+                    'warning': {
+                        'title': 'Invalid Range',
+                        'message': 'Grade/Attendance should be between 0 and 100 (saving will be blocked).'
+                    }
+                }
+
     @api.depends('grade', 'attendance_percentage')
     def _compute_passed(self):
         for rec in self:
