@@ -16,7 +16,7 @@ class AcademyEnrollmentController(http.Controller):
     
     @http.route(
         [
-            '/academy/course/<int:course_id>/enrollments',
+            '/academy/course/<int:course_id>/enrollments', #http://localhost:4062/academy/course/<course_id>/enrollments
             '/odoo/academy/course/<int:course_id>/enrollments',
         ],
         type='http',
