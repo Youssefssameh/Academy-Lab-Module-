@@ -34,6 +34,9 @@ class AcademyEnrollment(models.Model):
         readonly=True,
     )
 
+    reservation_deadline = fields.Datetime(string="Reservation Deadline")
+    is_reservation_active = fields.Boolean(string="Is Reservation Active", compute="_compute_is_reservation_active",store=False)
+    is_reservation_expired = fields.Boolean(string="Is Reservation Expired", compute="_compute_is_reservation_expired",store=False)
 
     @api.depends('grade', 'attendance_percentage')
     def _compute_ui_hint(self):
