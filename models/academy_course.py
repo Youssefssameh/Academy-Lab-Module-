@@ -34,19 +34,36 @@ class AcademyCourse(models.Model):
     instructor_name=fields.Char(string='Instructor Name', related='instructor_id.name', store=True) 
     product_id=fields.Many2one('product.product', string='Product',readonly=True)
 
+    #to count the reservations 
+    reserved_count = fields.Integer(
+        string='Reserved Seats',
+        compute='_compute_reserved_count',
+        store=True,
+        )
+
     _sql_constraints = [
         ('code_unique', 'unique("code")', 'Course code must be unique.')
     ]
 
+    @api.depends('enrollment_ids.state', 'enrollment_ids.reservation_deadline')
+    def _compute_reserved_count(self):
+        now = fields.Datetime.now()
+        for course in self:
+            course.reserved_count = len(course.enrollment_ids.filtered(
+                lambda e: e.state == 'draft'
+                and e.reservation_deadline
+                and e.reservation_deadline > now
+            ))
+    
     @api.depends('enrollment_ids.state')
     def _compute_enrolled_student_count(self):
         for course in self:
             course.enrolled_count = len(course.enrollment_ids.filtered(lambda e: e.state == 'confirmed'))
     
-    @api.depends('max_students', 'enrolled_count')
+    @api.depends('max_students', 'enrolled_count','reserved_count')
     def _compute_available_seats(self):
         for course in self:
-            course.available_seats = course.max_students - course.enrolled_count
+            course.available_seats = course.max_students - (course.enrolled_count + course.reserved_count)
     
     @api.depends('available_seats')
     def _compute_is_full(self):

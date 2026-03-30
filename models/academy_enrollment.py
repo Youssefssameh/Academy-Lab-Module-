@@ -1,5 +1,5 @@
 from odoo import models, fields, api
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError , UserError
 
 class AcademyEnrollment(models.Model):
     _name = 'academy.enrollment'
@@ -34,9 +34,55 @@ class AcademyEnrollment(models.Model):
         readonly=True,
     )
 
-    reservation_deadline = fields.Datetime(string="Reservation Deadline")
-    is_reservation_active = fields.Boolean(string="Is Reservation Active", compute="_compute_is_reservation_active",store=False)
-    is_reservation_expired = fields.Boolean(string="Is Reservation Expired", compute="_compute_is_reservation_expired",store=False)
+    reservation_deadline = fields.Datetime(string="Reservation Deadline",tracking=True)
+    is_reservation_active = fields.Boolean(string="Is Reservation Active", compute="_compute_reservation_flags",store=False)
+    is_reservation_expired = fields.Boolean(string="Is Reservation Expired", compute="_compute_reservation_flags",store=False)
+
+    cancel_reason = fields.Selection([
+        ('expired', 'Expired Reservation'),
+        ('manual', 'Manual Cancel'),
+        ('other', 'Other'),
+    ], string="Cancel Reason", tracking=True)
+
+    @api.depends('state', 'reservation_deadline')
+    def _compute_reservation_flags(self):
+        now = fields.Datetime.now()
+        for rec in self:
+            # Active: still draft and deadline not passed
+            rec.is_reservation_active = bool(
+                rec.state == 'draft'
+                and rec.reservation_deadline
+                and rec.reservation_deadline > now
+            )
+            # Expired: either (draft & passed deadline) 
+            rec.is_reservation_expired = bool(
+                (rec.state == 'draft' and rec.reservation_deadline and rec.reservation_deadline <= now)
+            )
+
+    def _is_reservation_valid(self):
+        """True only when draft reservation is still within its deadline."""
+        self.ensure_one()
+        if self.state != 'draft':
+            return False
+        if not self.reservation_deadline:
+            return False
+        return self.reservation_deadline > fields.Datetime.now()
+
+    # ✅ Cron target
+    @api.model
+    def _cron_expire_reservations(self):
+        now = fields.Datetime.now()
+        expired = self.search([
+            ('state', '=', 'draft'),
+            ('reservation_deadline', '!=', False),
+            ('reservation_deadline', '<=', now),
+        ])
+        if expired:
+            expired.write({
+                'state': 'cancelled',
+                'cancel_reason': 'expired',
+            })
+
 
     @api.depends('grade', 'attendance_percentage')
     def _compute_ui_hint(self):
@@ -103,12 +149,18 @@ class AcademyEnrollment(models.Model):
 
     def action_confirm(self):
         for enrollment in self:
+            #block confirm if expired reservation
+            if enrollment.state == 'draft' and enrollment.reservation_deadline and enrollment.reservation_deadline <= fields.Datetime.now():
+                raise UserError("This reservation has expired. Please create a new reservation.")
+            #capacity check 
             if enrollment.course_id.available_seats <= 0:
                 raise ValidationError('Cannot confirm enrollment: Course is full.')
             enrollment.state = 'confirmed'
 
     def action_cancel(self):
         for enrollment in self:
+            if enrollment.state != 'cancelled':
+                enrollment.cancel_reason = enrollment.cancel_reason or 'manual'
             enrollment.state = 'cancelled'
     def action_complete(self):
         for enrollment in self:

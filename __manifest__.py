@@ -30,6 +30,7 @@
         'reports/report_templates.xml',
         
         # Views
+        'views/academy_cron.xml',
         'views/academy_actions.xml',
         'views/academy_course_views.xml',
         'views/academy_category_views.xml',

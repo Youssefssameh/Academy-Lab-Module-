@@ -108,6 +108,10 @@
                             <field name="student_id" required="1"/>
                             <field name="course_id" required="1"/>
                             <field name="enrollment_date"/>
+                            <!-- ✅ Reservation testing fields -->
+                            <field name="reservation_deadline" readonly="1" invisible="state in ('confirmed','completed')"/>
+                            <field name="is_reservation_active" readonly="1" invisible="state in ('confirmed','completed')"/>
+                            <field name="cancel_reason" readonly="1" invisible="state != 'cancelled'"/>                                
                         </group>
 
                         <group>
